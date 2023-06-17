@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SpaceX Launches</title>
+    <style>
+        .launch-container {
+            text-align: center;
+        }
+        .launch-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SpaceX Launches</h1>
+    <div class="launch-container">
+        <button onclick="getLaunches()">Load Launches</button>
+        <div id="launches"></div>
+    </div>
+
+    <script>
+        function getLaunches() {
+            fetch('https://api.spacexdata.com/v4/launches')
+                .then(response => response.json())
+                .then(data => displayLaunches(data))
+                .catch(error => console.log(error));
+        }
+
+        function displayLaunches(launches) {
+            const launchesContainer = document.getElementById('launches');
+            launchesContainer.innerHTML = '';
+
+            launches.forEach(launch => {
+                const card = document.createElement('div');
+                card.className = 'launch-card';
+
+                const missionName = document.createElement('h2');
+                missionName.textContent = launch.name;
+
+                const launchDate = document.createElement('p');
+                launchDate.textContent = 'Launch Date: ' + new Date(launch.date_utc).toLocaleDateString();
+
+                const details = document.createElement('p');
+                details.textContent = 'Details: ' + launch.details;
+
+                card.appendChild(missionName);
+                card.appendChild(launchDate);
+                card.appendChild(details);
+
+                launchesContainer.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
